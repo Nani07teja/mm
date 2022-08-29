@@ -1,52 +1,104 @@
-# Prerequisites
-*.d
+#include<stdio.h>
+#define MAX 15
+void getgraph();//read a graph
+void printgraph(); // display
+void BFS(int v);
+int dequeue();
+void enqueue(int v);
+int Visited[MAX]={0};
+int G[MAX][MAX];
+int Q[MAX];
+int n,r=-1,f=-1;
+int main()
+{
+    int s,i;
+   // printf("\n Enter no of vertices in the graph:");
+    scanf("%d",&n);
+    getgraph();
+    printgraph();
+    if(n==0)
+    printf("\nGraph Empty - No BFS");
+    else
+    {
+   // printf("\n Enter a start vertex to start BFS in graph:");
+    scanf("%d",&s);
+    printf("\nThe BFS Traversal of Graph is :\n");    
+     BFS(s);
+     for(i=1;i<=n;i++) // if we still have some vertices unvisited
+     {
+       if(Visited[i]==0) // disconnected graphs
+       //BFS(i);
+       printf("\nThe vertex %d is not reachable from %d",i,s);
+     } 
+    }
+}
+void BFS(int v)
+{
+int i,res;
+Visited[v]=1;// mark  s as visited
+enqueue(v);// add start vertex to Q
+while(f!=-1) //repeat  untill Q is empty
+{
+   res=dequeue();// remove the element from the Q
+   printf("%d ,",res); // dispaly it - add to output
+   for(i=1;i<=n;i++)
+   {
+       if(G[res][i]==1&&Visited[i]==0) // find all adjacent and unvisited neighbours
+       {
+           enqueue(i);//add them to Q
+           Visited[i]=1;// mark them viisted.
+       }
+   }
+ }
+}
+int dequeue()
+{
+    int ver;
+    if(f==-1)
+    {
+        printf("\n Q Underflow");
+        return -1;
+    }
+    ver=Q[f];
+    if(r==f)
+    r=f=-1;
+    else
+    f++;
+    return(ver);
+}
+void enqueue(int v)
+{
+  if(r==MAX-1)
+    {
+        printf("\n Q Overflow");
+        return;
+    }  
+    Q[++r]=v;
+    if(r==0)
+    f=0;
+}
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
-
-# Linker output
-*.ilk
-*.map
-*.exp
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+void getgraph()
+{
+  int i,j;
+    for(i=1;i<=n;i++)
+    {
+        for(j=1;j<=n;j++)
+        {
+            //printf("\nEnter 1 if edge exists between %d and %d otherwise 0 : ",i,j);
+            scanf("%d",&G[i][j]);
+        }
+    }  
+}
+void printgraph()
+{
+    int i,j;
+    for(i=1;i<=n;i++)
+    {
+        printf("\nVERTEX %d ",i);
+        for(j=1;j<=n;j++)
+        {
+            printf("%d ",G[i][j]);
+        }
+    }
+}
